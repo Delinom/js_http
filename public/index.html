@@ -1,0 +1,33 @@
+<body>
+  <div class="app-bar">
+    <button id="add-ticket-btn" class="add-btn">Добавить тикет</button>
+  </div>
+  <div id="ticket-list" class="ticket-list"></div>
+  <div id="modal" class="modal-bg hidden">
+    <form id="modal-form" class="modal-content">
+      <h2 class="modal-title" id="modal-title">Создать тикет</h2>
+      <label class="input-label">Краткое описание
+        <input name="name" required class="input-field" placeholder="Краткое описание"/>
+      </label>
+      <label class="input-label">Детальное описание
+        <textarea name="description" required class="input-field" placeholder="Описание"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button type="button" id="modal-cancel" class="modal-btn cancel">Отмена</button>
+        <button type="submit" class="modal-btn submit">OK</button>
+      </div>
+    </form>
+  </div>
+  <div id="confirm-modal" class="modal-bg hidden">
+  <div class="modal-content">
+    <h2 class="modal-title">Удалить тикет</h2>
+    <div class="modal-message" style="margin: 16px 0 24px 0;">
+      Вы уверены, что хотите удалить тикет? Это действие необратимо.
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="confirm-cancel" class="modal-btn cancel">Отмена</button>
+      <button type="button" id="confirm-ok" class="modal-btn submit">ОК</button>
+    </div>
+  </div>
+</div>
+</body>
