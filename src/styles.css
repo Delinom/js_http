@@ -165,3 +165,7 @@ textarea.input-field { resize: vertical; min-height: 48px; }
 }
 .modal-btn.submit:hover { background: #155bb5; }
 .modal-btn.cancel:hover { background: #ededed; }
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}

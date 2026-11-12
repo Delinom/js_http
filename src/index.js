@@ -17,7 +17,22 @@ const confirmOk = document.getElementById('confirm-ok');
 let idToDelete = null;
 let editingTicketId = null;
 
-async function renderTickets() {
+function showError(error) {
+  const msg = error?.message || error?.toString?.() || String(error);
+  alert('Ошибка: ' + msg);
+}
+
+function errorHandled(fn) {
+  return async function(...args) {
+    try {
+      await fn.apply(this, args);
+    } catch (e) {
+      showError(e);
+    }
+  }
+}
+
+const renderTickets = errorHandled(async function() {
   const tickets = await fetchAllTickets();
   list.innerHTML = '';
   tickets.forEach(ticket => {
@@ -35,9 +50,12 @@ async function renderTickets() {
       </div>
       <div class="full-desc" id="desc-${ticket.id}" style="display:none"></div>
     `;
+    if (ticket.status) {
+      el.querySelector('.ticket-name').classList.add('completed');
+    };
     list.appendChild(el);
   });
-}
+});
 
 document.addEventListener('DOMContentLoaded', renderTickets);
 
@@ -58,16 +76,16 @@ confirmCancel.addEventListener('click', () => {
   idToDelete = null;
 });
 
-confirmOk.addEventListener('click', async () => {
+confirmOk.addEventListener('click', errorHandled(async () => {
   if (idToDelete) {
     await deleteTicketById(idToDelete);
     await renderTickets();
     idToDelete = null;
   }
   confirmModal.classList.add('hidden');
-});
+}));
 
-modalForm.addEventListener('submit', async (e) => {
+modalForm.addEventListener('submit', errorHandled(async (e) => {
   e.preventDefault();
   const formData = new FormData(modalForm);
   const name = formData.get('name');
@@ -81,9 +99,9 @@ modalForm.addEventListener('submit', async (e) => {
   modal.classList.add('hidden');
   editingTicketId = null;
   await renderTickets();
-});
+}));
 
-list.addEventListener('click', async (e) => {
+list.addEventListener('click', errorHandled(async (e) => {
   const { id } = e.target.dataset;
   if (!id) return;
 
@@ -113,13 +131,13 @@ list.addEventListener('click', async (e) => {
       descDiv.style.display = 'none';
     }
   }
-});
+}));
 
-list.addEventListener('change', async (e) => {
+list.addEventListener('change', errorHandled(async (e) => {
   if (e.target.classList.contains('ticket-status')) {
     const id = e.target.dataset.id;
     const dt = await fetchTicketDetails(id);
     await updateTicketById(id, dt.name, dt.description, e.target.checked);
     await renderTickets();
   }
-});
+}));
